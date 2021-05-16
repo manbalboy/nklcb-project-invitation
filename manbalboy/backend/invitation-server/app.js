@@ -8,6 +8,9 @@ const nunjucks = require('nunjucks');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const db = require('./models');
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require( "swagger-jsdoc");
+const swaggerOptions = require( "./swagger");
 
 
 class App {
@@ -61,6 +64,8 @@ class App {
 
 
     setMiddleWare() {
+        const specs = swaggerJsdoc(swaggerOptions);
+        this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
 
         // 미들웨어 셋팅
         this.app.use(logger('dev'));
@@ -70,7 +75,6 @@ class App {
     }
 
     setViewEngine() {
-
         nunjucks.configure('template', {
             autoescape: true,
             express: this.app
@@ -96,6 +100,8 @@ class App {
 
     getRouting() {
         this.app.use(require('./controllers'))
+        this.app.get('/favicon.ico', (req, res) => res.status(204).end()); 
+        
     }
 
     status404() {
