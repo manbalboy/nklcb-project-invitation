@@ -36,7 +36,7 @@ Comment.init(sequelize);
 User.associate(db);
 Comment.associate(db);
 
-User.sync({ force: true });
-Comment.sync({ force: true });
+// User.sync({ force: true });
+// Comment.sync({ force: true });
 
 module.exports = db;

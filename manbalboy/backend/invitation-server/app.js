@@ -50,8 +50,8 @@ class App {
                 // return db.sequelize.sync();
             })
             .then(() => {
+                db.sequelize.sync({ force: true });
                 console.log('DB Sync complete.');
-                // return db.sequelize.sync();
             })
             .catch(err => {
                 console.error('Unable to connect to the database:', err);
@@ -64,8 +64,8 @@ class App {
 
         // 미들웨어 셋팅
         this.app.use(logger('dev'));
-        this.app.use(bodyParser.json());
-        this.app.use(bodyParser.urlencoded({ extended: false }));
+        this.app.use(express.json());
+        this.app.use(express.urlencoded({ extended: false }));
 
     }
 
