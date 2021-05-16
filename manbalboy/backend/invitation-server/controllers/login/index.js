@@ -1,4 +1,9 @@
 const { Router } = require('express');
+/**
+ * @author : manbalboy <manbalboy@hanmail.net>
+ * @version 0.0.1
+ */
+
 const router = Router();
 const ctrl = require('./admin.ctrl');
 

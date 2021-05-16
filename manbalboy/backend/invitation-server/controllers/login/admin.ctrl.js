@@ -1,3 +1,8 @@
+/**
+ * @author : manbalboy <manbalboy@hanmail.net>
+ * @version 0.0.1
+ */
+
 exports.get_products = (_, res) => {
     res.send(
         { message: "hello" }

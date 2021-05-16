@@ -1,5 +1,11 @@
+/**
+ * @author : manbalboy <manbalboy@hanmail.net>
+ * @version 0.0.1
+ */
+
 const Sequelize = require('sequelize');
 const User = require('./User');
+const Comment = require('./Comment');
 const dotenv = require('dotenv');
 
 dotenv.config(); //LOAD CONFIG
@@ -22,11 +28,15 @@ const sequelize = new Sequelize(process.env.DATABASE,
 
 db.sequelize = sequelize;
 db.User = User;
+db.Comment = Comment;
 
 User.init(sequelize);
+Comment.init(sequelize);
 
-User.sync()
+User.associate(db);
+Comment.associate(db);
 
-// User.associate(db);
+User.sync({ force: true });
+Comment.sync({ force: true });
 
 module.exports = db;
