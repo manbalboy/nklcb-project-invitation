@@ -1,11 +1,16 @@
+const db = require('../../models');
+const { QueryTypes } = require('sequelize');
+
 /**
  * @author : manbalboy <manbalboy@hanmail.net>
  * @version 0.0.1
  */
-
-exports.get_products = (_, res) => {
+const query = `SELECT * FROM TB_USER`;
+exports.get_products = async (_, res) => {
+    let resultsVal = await db.sequelize.query(query,  { type: QueryTypes.SELECT })
+        console.log('resultsVal  >> ', resultsVal);
     res.send(
-        { message: "hello" }
+        resultsVal
     );
 }
 
