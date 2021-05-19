@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const ctrl = require('./auth.ctrl');
+const { isNotLoggedIn, verifyToken } = require('../../middlewares.js');
 
 /**
  * @author : manbalboy <manbalboy@hanmail.net>
@@ -14,23 +15,6 @@ const ctrl = require('./auth.ctrl');
  */
 
 const router = Router();
-
-const isLoggedIn = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        next();
-    } else {
-        res.status(403).send('로그인 필요');
-    }
-};
-
-const isNotLoggedIn = (req, res, next) => {
-    if (!req.isAuthenticated()) {
-        next();
-    } else {
-        const message = encodeURIComponent('로그인한 상태입니다.');
-        res.redirect(`/?error=${message}`);
-    }
-};
 
 /**
  * @swagger
@@ -56,5 +40,44 @@ const isNotLoggedIn = (req, res, next) => {
  *        description: ok
  */
 router.post('/join', isNotLoggedIn, ctrl.post_join);
+
+/**
+ * @swagger
+ *  paths:
+ *  /auth/token:
+ *    post:
+ *      tags:
+ *      - Auth
+ *      description: 토큰 발행 API
+ *      consumes:
+ *      - applicaion/json
+ *      produces:
+ *      - applicaion/json
+ *      responses:
+ *       200:
+ *        description: ok
+ */
+router.post('/token', ctrl.post_token);
+
+/**
+ * @swagger
+ *  paths:
+ *  /auth/test:
+ *    get:
+ *      tags:
+ *      - Auth
+ *      description: 토큰 발행 API TEST
+ *      consumes:
+ *      - applicaion/json
+ *      produces:
+ *      - applicaion/json
+ *      parameters:
+ *      - name: "autorization"
+ *        in: "header"
+ *      responses:
+ *       200:
+ *        description: ok
+ */
+router.get('/test', verifyToken, ctrl.get_token);
 
 module.exports = router;
