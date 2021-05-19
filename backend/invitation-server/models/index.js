@@ -12,8 +12,7 @@ dotenv.config(); //LOAD CONFIG
 
 const db = {};
 
-const sequelize = new Sequelize(process.env.DATABASE,
-    process.env.DB_USER, process.env.DB_PASSWORD, {
+const sequelize = new Sequelize(process.env.DATABASE, process.env.DB_USER, process.env.DB_PASSWORD, {
     host: process.env.DB_HOST,
     dialect: 'mariadb',
     timezone: '+09:00', //한국 시간 셋팅
@@ -21,9 +20,9 @@ const sequelize = new Sequelize(process.env.DATABASE,
     pool: {
         max: 5,
         min: 0,
-        idle: 10000
+        idle: 10000,
     },
-    port: process.env.DB_PORT
+    port: process.env.DB_PORT,
 });
 
 db.sequelize = sequelize;

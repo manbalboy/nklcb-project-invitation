@@ -6,15 +6,13 @@
 const express = require('express');
 const nunjucks = require('nunjucks');
 const logger = require('morgan');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const db = require('./models');
-const swaggerUi = require("swagger-ui-express");
-const swaggerJsdoc = require( "swagger-jsdoc");
-const swaggerOptions = require( "./swagger");
-
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerOptions = require('./swagger');
 
 class App {
-
     constructor() {
         this.app = express();
 
@@ -41,13 +39,12 @@ class App {
 
         // 에러처리
         this.errorHandler();
-
-
     }
 
     dbConnection() {
         // DB authentication
-        db.sequelize.authenticate()
+        db.sequelize
+            .authenticate()
             .then(() => {
                 console.log('Connection has been established successfully.');
                 // return db.sequelize.sync();
@@ -61,8 +58,6 @@ class App {
             });
     }
 
-
-
     setMiddleWare() {
         const specs = swaggerJsdoc(swaggerOptions);
         this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
@@ -71,53 +66,46 @@ class App {
         this.app.use(logger('dev'));
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
-
     }
 
     setViewEngine() {
         nunjucks.configure('template', {
             autoescape: true,
-            express: this.app
+            express: this.app,
         });
-
     }
-
 
     setStatic() {
         this.app.use('/uploads', express.static('uploads'));
     }
 
     setLocals() {
-
         // 템플릿 변수
         this.app.use((req, res, next) => {
             this.app.locals.isLogin = true;
             this.app.locals.req_path = req.path;
             next();
         });
-
     }
 
     getRouting() {
-        this.app.use(require('./controllers'))
-        this.app.get('/favicon.ico', (req, res) => res.status(204).end()); 
-        
+        this.app.use(require('./controllers'));
+        this.app.get('/favicon.ico', (req, res) => res.status(204).end());
     }
 
     status404() {
+        // eslint-disable-next-line no-unused-vars
         this.app.use((req, res, _) => {
-            res.status(404).render('common/404.html')
+            res.status(404).render('common/404.html');
         });
     }
 
     errorHandler() {
-
+        // eslint-disable-next-line no-unused-vars
         this.app.use((err, req, res, _) => {
-            res.status(500).render('common/500.html')
+            res.status(500).render('common/500.html');
         });
-
     }
-
 }
 
 module.exports = new App().app;

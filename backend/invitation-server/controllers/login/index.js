@@ -4,7 +4,7 @@ const { Router } = require('express');
  * @version 0.0.1
  */
 
-/** 
+/**
  * @swagger
  * tags:
  * - name: "login"
@@ -24,7 +24,7 @@ const { Router } = require('express');
 const router = Router();
 const ctrl = require('./admin.ctrl');
 
-function testMiddleWare( req, res, next ){
+function testMiddleWare(req, res, next) {
     console.log('첫번째 미들웨어');
     next();
 }
@@ -45,13 +45,13 @@ function testMiddleWare( req, res, next ){
  *       200:
  *        description: board of selected id column list
  */
-router.get('/', testMiddleWare, (req,res) => {
-    res.json({test: 1});
+router.get('/', testMiddleWare, (req, res) => {
+    res.json({ test: 1 });
 });
 
-router.get('/products', ctrl.get_products );
+router.get('/products', ctrl.get_products);
 
-router.get('/products/write', ctrl.get_products_write );
+router.get('/products/write', ctrl.get_products_write);
 /**
  * @swagger
  *  paths:
@@ -66,8 +66,6 @@ router.get('/products/write', ctrl.get_products_write );
  *       200:
  *        description: board of selected id column list
  */
-router.post('/products/write', ctrl.post_products_write );
+router.post('/products/write', ctrl.post_products_write);
 
 module.exports = router;
-
-
