@@ -12,13 +12,6 @@ const { Router } = require('express');
  *   externalDocs:
  *     description: "Find out more"
  *     url: "http://swagger.io"
- * - name: "store"
- *   description: "Access to Petstore orders"
- * - name: "user"
- *   description: "Operations about user"
- *   externalDocs:
- *     description: "Find out more about our store"
- *     url: "http://swagger.io"
  */
 
 const router = Router();

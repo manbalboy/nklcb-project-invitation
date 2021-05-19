@@ -6,11 +6,16 @@
 const express = require('express');
 const nunjucks = require('nunjucks');
 const logger = require('morgan');
-// const bodyParser = require('body-parser');
 const db = require('./models');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerOptions = require('./swagger');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const passport = require('passport');
+
+const dotenv = require('dotenv');
+dotenv.config(); //LOAD CONFIG
 
 class App {
     constructor() {
@@ -59,13 +64,35 @@ class App {
     }
 
     setMiddleWare() {
+        // 미들웨어 셋팅
+        //swagger settting
         const specs = swaggerJsdoc(swaggerOptions);
         this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
 
-        // 미들웨어 셋팅
         this.app.use(logger('dev'));
+        //body parser setting
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
+
+        //cookieparser setting
+        this.app.use(cookieParser(process.env.COOKIE_SECRET));
+
+        //express-session setting
+        this.app.use(
+            session({
+                resave: false,
+                saveUninitialized: false,
+                secret: process.env.COOKIE_SECRET,
+                cookie: {
+                    httpOnly: true,
+                    secure: false,
+                },
+            }),
+        );
+
+        //passport setting
+        this.app.use(passport.initialize());
+        this.app.use(passport.session());
     }
 
     setViewEngine() {
@@ -96,14 +123,15 @@ class App {
     status404() {
         // eslint-disable-next-line no-unused-vars
         this.app.use((req, res, _) => {
-            res.status(404).render('common/404.html');
+            res.status(404).json({ msg: 404 });
         });
     }
 
     errorHandler() {
         // eslint-disable-next-line no-unused-vars
         this.app.use((err, req, res, _) => {
-            res.status(500).render('common/500.html');
+            console.log(err);
+            res.status(500).send(err);
         });
     }
 }

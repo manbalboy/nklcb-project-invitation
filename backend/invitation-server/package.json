@@ -11,12 +11,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.5",
     "dotenv": "^9.0.2",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "mariadb": "^2.5.3",
     "morgan": "^1.9.1",
     "mysql2": "^2.2.5",
     "nunjucks": "^3.2.0",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
     "sequelize": "^6.6.2"
   },
   "devDependencies": {
