@@ -13,6 +13,7 @@ const swaggerOptions = require('./swagger');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
+const cors = require('cors');
 const passportConfig = require('./passport');
 
 passportConfig();
@@ -96,6 +97,14 @@ class App {
         //passport setting
         this.app.use(passport.initialize());
         this.app.use(passport.session());
+
+        //cors
+        this.app.use(
+            cors({
+                origin: true,
+                credentials: true,
+            }),
+        );
     }
 
     setViewEngine() {
