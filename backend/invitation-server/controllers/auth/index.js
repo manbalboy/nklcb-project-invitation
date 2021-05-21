@@ -44,6 +44,31 @@ router.post('/join', isNotLoggedIn, ctrl.post_join);
 /**
  * @swagger
  *  paths:
+ *  /auth/login:
+ *    post:
+ *      tags:
+ *      - Auth
+ *      description: 로그인 API
+ *      requestBody:
+ *       required: true
+ *       description: request body
+ *       content:
+ *        application/json:
+ *         schema:
+ *           $ref: '#/components/schemas/User'
+ *      consumes:
+ *      - applicaion/json
+ *      produces:
+ *      - applicaion/json
+ *      responses:
+ *       200:
+ *        description: ok
+ */
+router.post('/login', isNotLoggedIn, ctrl.post_login, ctrl.post_token);
+
+/**
+ * @swagger
+ *  paths:
  *  /auth/token:
  *    post:
  *      tags:

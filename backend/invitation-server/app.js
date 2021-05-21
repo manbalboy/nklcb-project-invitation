@@ -13,6 +13,9 @@ const swaggerOptions = require('./swagger');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
+const passportConfig = require('./passport');
+
+passportConfig();
 
 const dotenv = require('dotenv');
 dotenv.config(); //LOAD CONFIG

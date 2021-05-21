@@ -4,6 +4,7 @@ const { QueryTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
 const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
 
 /**
  * @author : manbalboy <manbalboy@hanmail.net>
@@ -56,6 +57,32 @@ exports.post_token = async (req, res, next) => {
             message: '토큰이 발급되었습니다',
             token,
         });
+    } catch (error) {
+        console.error(error);
+        return res.status(200).json({
+            code: 500,
+            message: '서버 에러',
+        });
+    }
+};
+
+exports.post_login = (req, res, next) => {
+    try {
+        passport.authenticate('local', (authError, user, info) => {
+            if (authError) {
+                return next(authError);
+            }
+            if (!user) {
+                return res.json({ code: 201, massage: 'user is not defined' });
+            }
+            return req.login(user, loginError => {
+                if (loginError) {
+                    return next(loginError);
+                }
+                // return res.redirect('/');
+                return next();
+            });
+        })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
     } catch (error) {
         console.error(error);
         return res.status(200).json({
