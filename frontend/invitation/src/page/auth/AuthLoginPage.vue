@@ -17,6 +17,7 @@
 
 <script>
     import authApi from '@/api/auth/auth-api.js';
+    import { mapMutations } from 'vuex';
     export default {
         name: 'AuthLoginPage',
 
@@ -32,9 +33,17 @@
         },
 
         methods: {
+            ...mapMutations('auth', ['LOGIN']),
+
             loginButtonClickEV() {
                 authApi.postLogin(this.LOGIN_DATA).then(res => {
                     console.log(res);
+                    if (res.data.success) {
+                        alert('로그인성공');
+                        console.log(res.data);
+
+                        this.LOGIN(res.data);
+                    }
                 });
             },
 
