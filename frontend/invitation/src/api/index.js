@@ -42,6 +42,7 @@ request.interceptors.response.use(
             console.error('[axios.interceptors.response] response : ' + err.message);
         }
     },
+
     function (error) {
         try {
             console.log(error);
@@ -59,6 +60,4 @@ request.interceptors.response.use(
     },
 );
 
-export default {
-    request,
-};
+export default request;

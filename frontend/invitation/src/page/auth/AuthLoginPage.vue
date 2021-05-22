@@ -2,18 +2,47 @@
     <section>
         <h2>Login</h2>
         <div class="idForm">
-            <input type="text" class="id" placeholder="ID" />
+            <input type="text" class="id" placeholder="EMAIL" v-model="LOGIN_DATA.email" />
         </div>
         <div class="passForm">
-            <input type="password" class="pw" placeholder="PW" />
+            <input type="password" class="pw" placeholder="PW" v-model="LOGIN_DATA.password" />
         </div>
-        <button type="button" class="btn" onclick="button()"> LOG IN </button>
-        <div class="bottomText"> Don't you have ID? <a href="#">sign up</a> </div>
+        <button type="button" class="btn" @click="loginButtonClickEV"> LOG IN </button>
+        <div class="bottomText">
+            Don't you have ID?
+            <a @click="signUpClickEV">sign up </a>
+        </div>
     </section>
 </template>
 
 <script>
-    export default {};
+    import authApi from '@/api/auth/auth-api.js';
+    export default {
+        name: 'AuthLoginPage',
+
+        data() {
+            return {
+                LOGIN_DATA: {
+                    email: '',
+                    nick: '',
+                    password: '',
+                    provider: 'local',
+                },
+            };
+        },
+
+        methods: {
+            loginButtonClickEV() {
+                authApi.postLogin(this.LOGIN_DATA).then(res => {
+                    console.log(res);
+                });
+            },
+
+            signUpClickEV() {
+                this.$router.push('/auth/join');
+            },
+        },
+    };
 </script>
 
 <style scoped>

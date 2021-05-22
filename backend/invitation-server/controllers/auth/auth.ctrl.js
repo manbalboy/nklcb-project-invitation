@@ -1,3 +1,8 @@
+/**
+ * @author : manbalboy <manbalboy@hanmail.net>
+ * @version 0.0.1
+ */
+
 const db = require('../../models');
 const { QueryTypes } = require('sequelize');
 // const passport = require('passport');
@@ -22,7 +27,9 @@ exports.post_join = async (req, res, next) => {
     try {
         const exUser = await User.findOne({ where: { email } });
         if (exUser) {
-            req.body.msg = '등록된 유저가 있습니다.';
+            req.body.success = false;
+            req.body.code = '200';
+            req.body.message = '등록된 유저가 있습니다.';
             return res.json(req.body);
         }
         const hash = await bcrypt.hash(password, 12);
@@ -31,7 +38,9 @@ exports.post_join = async (req, res, next) => {
             nick,
             password: hash,
         });
-        req.body.msg = '성공';
+        req.body.success = true;
+        req.body.code = '200';
+        req.body.message = '성공';
         return res.json(req.body);
     } catch (error) {
         console.error(error);
@@ -52,9 +61,11 @@ exports.post_token = async (req, res, next) => {
                 issuer: 'manbalboy',
             },
         );
+
         return res.json({
             code: 200,
             message: '토큰이 발급되었습니다',
+            success: true,
             token,
         });
     } catch (error) {
@@ -72,9 +83,12 @@ exports.post_login = (req, res, next) => {
             if (authError) {
                 return next(authError);
             }
+
             if (!user) {
-                return res.json({ code: 201, massage: 'user is not defined' });
+                console.log(info);
+                return res.json({ code: 200, message: info.message, success: false });
             }
+
             return req.login(user, loginError => {
                 if (loginError) {
                     return next(loginError);
@@ -87,6 +101,7 @@ exports.post_login = (req, res, next) => {
         console.error(error);
         return res.status(200).json({
             code: 500,
+            success: false,
             message: '서버 에러',
         });
     }

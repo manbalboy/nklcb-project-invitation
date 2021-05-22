@@ -1,11 +1,11 @@
-const { Router } = require('express');
-const ctrl = require('./auth.ctrl');
-const { isNotLoggedIn, verifyToken } = require('../../middlewares.js');
-
 /**
  * @author : manbalboy <manbalboy@hanmail.net>
  * @version 0.0.1
  */
+
+const { Router } = require('express');
+const { isNotLoggedIn, verifyToken } = require('../../middlewares.js');
+const ctrl = require('./auth.ctrl');
 
 /**
  * @swagger
@@ -15,6 +15,13 @@ const { isNotLoggedIn, verifyToken } = require('../../middlewares.js');
  */
 
 const router = Router();
+router.use((req, res, next) => {
+    res.commonObj = {
+        success: true,
+        code: 200,
+    };
+    next();
+});
 
 /**
  * @swagger

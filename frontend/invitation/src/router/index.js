@@ -1,14 +1,17 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import homeRouter from '@/router/home-router';
+import authRouter from '@/router/auth-router';
 
 Vue.use(VueRouter);
 
 const routes = [
     {
-        path: '/login',
-        name: 'Login',
-        component: () => import(/* webpackChunkName: "about" */ '@/page/LoginPage.vue'),
+        path: '/',
+        redirect: '/auth/login',
     },
+    ...authRouter,
+    ...homeRouter,
 ];
 
 const router = new VueRouter({

@@ -2,6 +2,7 @@ module.exports = {
     devServer: {
         overlay: false,
     },
+
     pluginOptions: {
         webpackBundleAnalyzer: {
             openAnalyzer: false, // 자동으로 open하지 않음
