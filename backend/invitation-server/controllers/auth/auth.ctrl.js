@@ -10,6 +10,11 @@ const bcrypt = require('bcrypt');
 const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+const redis = require('redis');
+const client = redis.createClient({
+    host: 'manbalboy.com',
+    port: '11408',
+});
 
 /**
  * @author : manbalboy <manbalboy@hanmail.net>
@@ -50,10 +55,9 @@ exports.post_join = async (req, res, next) => {
 
 exports.post_token = async (req, res, next) => {
     try {
-        const token = jwt.sign(
+        const accessToken = jwt.sign(
             {
-                id: 'manbalboy',
-                nick: 'manbalboy',
+                id: req.body.email,
             },
             process.env.JWT_SECRET,
             {
@@ -62,11 +66,15 @@ exports.post_token = async (req, res, next) => {
             },
         );
 
+        const refreshToken = jwt.sign({}, process.env.JWT_SECRET, { expiresIn: '14d', issuer: 'manbalboy' });
+        client.set(req.body.email, refreshToken);
+
         return res.json({
             code: 200,
             message: '토큰이 발급되었습니다',
             success: true,
-            token,
+            accessToken,
+            refreshToken,
         });
     } catch (error) {
         console.error(error);
@@ -108,5 +116,9 @@ exports.post_login = (req, res, next) => {
 };
 
 exports.get_token = async (req, res, next) => {
+    // if (req.cookies.access === undefined) {
+    //     throw Error('API 사용 권한이 없습니다.');
+    // }
+
     res.json(req.decoded);
 };
