@@ -4,7 +4,6 @@
 
 ## 1. 구성원
  - [정훈(manbalboy)](https://github.com/manbalboy)
- - [김선중(sunjoong91)](https://github.com/sunjoong91)
 
 ## 2. 기술스택
 - Node.js (Back)
