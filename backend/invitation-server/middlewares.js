@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { CODE_MESSAGE_TOKEN } = require('./CONST_CODE_MESSAGE.js');
 const dotenv = require('dotenv');
 dotenv.config(); //LOAD CONFIG
 
@@ -26,15 +27,18 @@ exports.verifyToken = (req, res, next) => {
         return next();
     } catch (error) {
         if (error.name == 'TokenExpiredError') {
+            console.log(error);
             // 유효기간 초과
             return res.status(200).json({
-                code: 'token',
-                message: '토큰만료',
+                code: 'T502',
+                success: false,
+                message: CODE_MESSAGE_TOKEN.T502,
             });
         } else {
             return res.status(200).json({
-                code: 'token',
-                message: '유효하지 않는 토큰',
+                code: 'T501',
+                success: false,
+                message: CODE_MESSAGE_TOKEN.T501,
             });
         }
     }

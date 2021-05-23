@@ -11,10 +11,18 @@ const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const redis = require('redis');
+const { CODE_MESSAGE_TOKEN } = require('../../CONST_CODE_MESSAGE.js');
+
+const dotenv = require('dotenv');
+dotenv.config(); //LOAD CONFIG
+
 const client = redis.createClient({
-    host: 'manbalboy.com',
-    port: '11408',
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
 });
+
+const { promisify } = require('util');
+const getAsync = promisify(client.get).bind(client);
 
 /**
  * @author : manbalboy <manbalboy@hanmail.net>
@@ -57,7 +65,7 @@ exports.post_token = async (req, res, next) => {
     try {
         const accessToken = jwt.sign(
             {
-                id: req.body.email,
+                email: req.body.email,
             },
             process.env.JWT_SECRET,
             {
@@ -68,6 +76,16 @@ exports.post_token = async (req, res, next) => {
 
         const refreshToken = jwt.sign({}, process.env.JWT_SECRET, { expiresIn: '14d', issuer: 'manbalboy' });
         client.set(req.body.email, refreshToken);
+
+        res.cookie('access_token', accessToken, {
+            // expires: new Date(Date.now() + 8 * 3600000), // cookie will be removed after 8 hours
+            maxAge: 10 * 60 * 1000,
+        });
+
+        res.cookie('refresh_token', accessToken, {
+            // expires: new Date(Date.now() + 8 * 3600000), // cookie will be removed after 8 hours
+            maxAge: 60 * 60 * 24 * 14 * 1000,
+        });
 
         return res.json({
             code: 200,
@@ -116,9 +134,109 @@ exports.post_login = (req, res, next) => {
 };
 
 exports.get_token = async (req, res, next) => {
+    console.log('req.cookies', req.cookies);
     // if (req.cookies.access === undefined) {
     //     throw Error('API 사용 권한이 없습니다.');
     // }
+    const returnObject = {
+        success: true,
+        code: 200,
+        ...req.decoded,
+    };
 
-    res.json(req.decoded);
+    res.json(returnObject);
+};
+
+exports.get_refreshToken = async (req, res, next) => {
+    try {
+        const { email } = jwt.decode(req.headers.autorization);
+        let refreshTokenRedis = await getAsync(email);
+        let refreshToken = req.headers['refresh-token'];
+
+        console.log('refreshTokenRedis >>>>', refreshTokenRedis);
+        console.log('refreshToken >>>>', refreshToken);
+
+        if (!refreshTokenRedis) {
+            const returnObject = {
+                success: false,
+                code: 'T503',
+                message: CONST_CODE_MESSAGE.T503,
+            };
+
+            return res.json(returnObject);
+        }
+
+        console.log('test1');
+
+        if (!refreshToken) {
+            const returnObject = {
+                success: false,
+                code: 'T504',
+                message: CONST_CODE_MESSAGE.T504,
+            };
+
+            return res.json(returnObject);
+        }
+
+        console.log('test2');
+        if (refreshToken !== refreshTokenRedis) {
+            const returnObject = {
+                success: false,
+                code: 'T505',
+                message: CONST_CODE_MESSAGE.T505,
+            };
+
+            return res.json(returnObject);
+        }
+        console.log('test3');
+
+        jwt.verify(refreshTokenRedis, process.env.JWT_SECRET, function (error, decoded) {
+            if (error) {
+                if (error.name == 'TokenExpiredError') {
+                    console.log(error);
+                    // 유효기간 초과
+                    return res.status(200).json({
+                        code: 'T502',
+                        success: false,
+                        message: CODE_MESSAGE_TOKEN.T502,
+                    });
+                } else {
+                    return res.status(200).json({
+                        code: 'T501',
+                        success: false,
+                        message: CODE_MESSAGE_TOKEN.T501,
+                    });
+                }
+            }
+        });
+        console.log('test5');
+
+        const accessToken = jwt.sign(
+            {
+                email,
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: '10m', // 1분
+                issuer: 'manbalboy',
+            },
+        );
+
+        const returnObject = {
+            success: true,
+            code: 'T201',
+            message: 'TOKEN 재발급',
+            accessToken,
+            refreshToken,
+        };
+
+        return res.json(returnObject);
+    } catch (e) {
+        const returnObject = {
+            success: false,
+            code: 200,
+            message: e.message,
+        };
+        res.json(returnObject);
+    }
 };

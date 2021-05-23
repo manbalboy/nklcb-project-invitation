@@ -1,4 +1,5 @@
 import request from '@/api/index.js';
+import store from '@/store/index.js';
 
 const apiURL = process.env.VUE_APP_API_URL;
 
@@ -18,6 +19,36 @@ const authApi = {
                 alert(res.data.message);
             }
             return Promise.resolve(res);
+        });
+    },
+
+    async getToken() {
+        return await request.get(`${apiURL}/auth/test`).then(async res => {
+            let responseObject = res;
+            if (!res.data.success) {
+                if (res.data.code === 'T502') {
+                    const { refreshToken } = localStorage;
+                    await request
+                        .get(`${apiURL}/auth/refreshToken`, {
+                            headers: {
+                                ['refresh-token']: refreshToken,
+                            },
+                        })
+                        .then(res => {
+                            if (res.data.success) {
+                                sessionStorage.setItem('accessToken', res.data.accessToken);
+
+                                store.commit('auth/SET_TOKEN', {
+                                    accessToken: res.data.accessToken || '',
+                                    refreshToken: res.data.refreshToken || '',
+                                });
+                            }
+                            responseObject = res;
+                        });
+                }
+            }
+
+            return Promise.resolve(responseObject);
         });
     },
 };

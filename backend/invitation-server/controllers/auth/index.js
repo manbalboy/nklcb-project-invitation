@@ -111,5 +111,6 @@ router.post('/token', ctrl.post_token);
  *        description: ok
  */
 router.get('/test', verifyToken, ctrl.get_token);
+router.get('/refreshToken', ctrl.get_refreshToken);
 
 module.exports = router;

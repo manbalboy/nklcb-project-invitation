@@ -12,6 +12,8 @@
             Don't you have ID?
             <a @click="signUpClickEV">sign up </a>
         </div>
+
+        <button type="button" class="btn" @click="test"> test </button>
     </section>
 </template>
 
@@ -49,6 +51,12 @@
 
             signUpClickEV() {
                 this.$router.push('/auth/join');
+            },
+
+            test() {
+                authApi.getToken().then(res => {
+                    console.log('fdsafdsaf', res);
+                });
             },
         },
     };

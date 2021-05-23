@@ -12,8 +12,8 @@ const store = new Vuex.Store({
     plugins: [createPersistedState()],
 });
 
-const { accessToken, refreshToken } = localStorage;
-console.log(store);
-store.commit('auth/SET_TOKEN', { accessToken, refreshToken });
+const { refreshToken } = localStorage;
+const { accessToken } = sessionStorage;
+store.commit('auth/SET_TOKEN', { accessToken: accessToken || '', refreshToken: refreshToken || '' });
 
 export default store;

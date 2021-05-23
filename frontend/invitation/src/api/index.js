@@ -8,6 +8,7 @@ axios.defaults.headers['Cache-Control'] = 'no-cache,no-store,must-revalidate,max
 let config = {
     // onUploadProgress: function (progressEvent) {},
     // onDownloadProgress: function (progressEvent) {},
+    origin: ['http://localhost:8080', 'http://localhost:3000'],
 };
 
 const request = axios.create(config);
@@ -16,6 +17,14 @@ request.interceptors.request.use(
     //요청성공전
     async function (config) {
         try {
+            console.log('config', config);
+            const { accessToken } = sessionStorage;
+
+            if (accessToken) {
+                config.headers['autorization'] = accessToken;
+            } else {
+                delete config.headers['autorization'];
+            }
             return config;
         } catch (err) {
             console.error('[axios.interceptors.request] config : ' + err.message);

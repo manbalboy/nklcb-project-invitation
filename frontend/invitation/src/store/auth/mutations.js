@@ -14,7 +14,7 @@ const mutations = {
         state.refreshToken = data.refreshToken;
         state.loginMemberInfo = { email: data.email, nick: data.nick };
 
-        localStorage.setItem('accessToken', data.accessToken);
+        sessionStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('refreshToken', data.refreshToken);
     },
 };
