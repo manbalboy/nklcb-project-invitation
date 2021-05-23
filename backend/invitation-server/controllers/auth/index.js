@@ -94,11 +94,11 @@ router.post('/token', ctrl.post_token);
 /**
  * @swagger
  *  paths:
- *  /auth/test:
+ *  /auth/token:
  *    get:
  *      tags:
  *      - Auth
- *      description: 토큰 발행 API TEST
+ *      description: access-token 유효성검사
  *      consumes:
  *      - applicaion/json
  *      produces:
@@ -110,7 +110,29 @@ router.post('/token', ctrl.post_token);
  *       200:
  *        description: ok
  */
-router.get('/test', verifyToken, ctrl.get_token);
+router.get('/token', verifyToken, ctrl.get_token);
+
+/**
+ * @swagger
+ *  paths:
+ *  /auth/refreshToken:
+ *    get:
+ *      tags:
+ *      - Auth
+ *      description: access-token 재발행
+ *      consumes:
+ *      - applicaion/json
+ *      produces:
+ *      - applicaion/json
+ *      parameters:
+ *      - name: "autorization"
+ *        in: "header"
+ *      - name: "refresh-token"
+ *        in: "header"
+ *      responses:
+ *       200:
+ *        description: ok
+ */
 router.get('/refreshToken', ctrl.get_refreshToken);
 
 module.exports = router;

@@ -23,7 +23,7 @@ const authApi = {
     },
 
     async getToken() {
-        return await request.get(`${apiURL}/auth/test`).then(async res => {
+        return await request.get(`${apiURL}/auth/token`).then(async res => {
             let responseObject = res;
             if (!res.data.success) {
                 if (res.data.code === 'T502') {

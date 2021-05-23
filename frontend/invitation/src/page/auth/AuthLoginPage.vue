@@ -13,7 +13,7 @@
             <a @click="signUpClickEV">sign up </a>
         </div>
 
-        <button type="button" class="btn" @click="test"> test </button>
+        <!-- <button type="button" class="btn" @click="test"> test </button> -->
     </section>
 </template>
 
@@ -43,8 +43,8 @@
                     if (res.data.success) {
                         alert('로그인성공');
                         console.log(res.data);
-
                         this.LOGIN(res.data);
+                        this.$router.push('/home/main');
                     }
                 });
             },
@@ -53,11 +53,11 @@
                 this.$router.push('/auth/join');
             },
 
-            test() {
-                authApi.getToken().then(res => {
-                    console.log('fdsafdsaf', res);
-                });
-            },
+            // test() {
+            //     authApi.getToken().then(res => {
+            //         console.log('fdsafdsaf', res);
+            //     });
+            // },
         },
     };
 </script>

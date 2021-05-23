@@ -134,10 +134,6 @@ exports.post_login = (req, res, next) => {
 };
 
 exports.get_token = async (req, res, next) => {
-    console.log('req.cookies', req.cookies);
-    // if (req.cookies.access === undefined) {
-    //     throw Error('API 사용 권한이 없습니다.');
-    // }
     const returnObject = {
         success: true,
         code: 200,
@@ -153,9 +149,6 @@ exports.get_refreshToken = async (req, res, next) => {
         let refreshTokenRedis = await getAsync(email);
         let refreshToken = req.headers['refresh-token'];
 
-        console.log('refreshTokenRedis >>>>', refreshTokenRedis);
-        console.log('refreshToken >>>>', refreshToken);
-
         if (!refreshTokenRedis) {
             const returnObject = {
                 success: false,
@@ -165,8 +158,6 @@ exports.get_refreshToken = async (req, res, next) => {
 
             return res.json(returnObject);
         }
-
-        console.log('test1');
 
         if (!refreshToken) {
             const returnObject = {
@@ -178,7 +169,6 @@ exports.get_refreshToken = async (req, res, next) => {
             return res.json(returnObject);
         }
 
-        console.log('test2');
         if (refreshToken !== refreshTokenRedis) {
             const returnObject = {
                 success: false,
@@ -188,7 +178,6 @@ exports.get_refreshToken = async (req, res, next) => {
 
             return res.json(returnObject);
         }
-        console.log('test3');
 
         jwt.verify(refreshTokenRedis, process.env.JWT_SECRET, function (error, decoded) {
             if (error) {
@@ -209,7 +198,6 @@ exports.get_refreshToken = async (req, res, next) => {
                 }
             }
         });
-        console.log('test5');
 
         const accessToken = jwt.sign(
             {

@@ -1,8 +1,15 @@
-import store from '@/store/index.js';
+// import store from '@/store/index.js';
+import authApi from '@/api/auth/auth-api.js';
 
-const requireAuth = (to, from, next) => {
-    const loginPath = `/auth/login?rPath=${encodeURIComponent(to.path)}`;
-    store.getters.isAuth ? next() : next(loginPath);
+const requireAuth = async (to, from, next) => {
+    // const loginPath = `/auth/login?rPath=${encodeURIComponent(to.path)}`;
+    await authApi.getToken().then(res => {
+        if (res.data.success) {
+            next();
+        } else {
+            next('/auth/login');
+        }
+    });
 };
 
 const homeRoutes = [
