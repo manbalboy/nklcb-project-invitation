@@ -11,6 +11,7 @@ const mutations = {
         }
 
         state.accessToken = data.accessToken;
+        console.log('state.accessToken >>> ', state.accessToken);
         state.refreshToken = data.refreshToken;
         state.loginMemberInfo = { email: data.email, nick: data.nick };
 

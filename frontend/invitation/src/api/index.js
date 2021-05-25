@@ -17,7 +17,6 @@ request.interceptors.request.use(
     //요청성공전
     async function (config) {
         try {
-            console.log('config', config);
             const { accessToken } = sessionStorage;
 
             if (accessToken) {

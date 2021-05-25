@@ -2,7 +2,7 @@
     <section>
         <h2>Login</h2>
         <div class="idForm">
-            <input type="text" class="id" placeholder="EMAIL" v-model="LOGIN_DATA.email" />
+            <input type="text" class="email" placeholder="EMAIL" v-model="LOGIN_DATA.email" />
         </div>
         <div class="passForm">
             <input type="password" class="pw" placeholder="PW" v-model="LOGIN_DATA.password" />
@@ -41,7 +41,6 @@
                 authApi.postLogin(this.LOGIN_DATA).then(res => {
                     console.log(res);
                     if (res.data.success) {
-                        alert('로그인성공');
                         console.log(res.data);
                         this.LOGIN(res.data);
                         this.$router.push('/home/main');
