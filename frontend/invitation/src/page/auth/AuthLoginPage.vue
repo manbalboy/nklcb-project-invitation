@@ -18,10 +18,30 @@
 </template>
 
 <script>
+    /**
+     * write a component's description
+     */
     import authApi from '@/api/auth/auth-api.js';
     import { mapMutations } from 'vuex';
+    /**
+     * @vue-prop {Number} initialCounter - Initial counter's value
+     * @vue-prop {Number} [step=1] - Step
+     * @vue-data {Number} counter - Current counter's value
+     * @vue-computed {String} message
+     * @vue-event {Number} increment - Emit counter's value after increment
+     * @vue-event {Number} decrement - Emit counter's value after decrement
+     */
     export default {
         name: 'AuthLoginPage',
+        props: {
+            /**
+             * @description : fdsa
+             */
+            test: {
+                type: String,
+                default: '2',
+            },
+        },
 
         data() {
             return {

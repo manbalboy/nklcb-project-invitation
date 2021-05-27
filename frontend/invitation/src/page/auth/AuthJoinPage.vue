@@ -19,6 +19,15 @@
 
 <script>
     import authApi from '@/api/auth/auth-api.js';
+    /**
+     * Shows a progress in given Project.
+     * By giving _spent_ and _remaining_ time (in hours) it computes the
+     * progress and shows it in the UI.
+     *
+     * @component
+     * @example
+     * <ProgressBar :spent="100" :remaining="50"></ProgressBar>
+     */
     export default {
         name: 'AuthJoinPage',
 
@@ -34,6 +43,13 @@
         },
 
         methods: {
+            /**
+             * @function
+             * @param {number} a  ff
+             * @param {number} b fdsa
+             * @description <span style="color:red">test</span>
+             * @param
+             */
             joinClickEv() {
                 authApi.postJoin(this.LOGIN_DATA).then(res => {
                     if (res.data.success) {
