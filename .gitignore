@@ -2,7 +2,7 @@
 node_modules
 /dist
 **/docs
-
+frontend/invitation/public/jsdoc
 
 #backup file
 *.bak
